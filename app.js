@@ -13,6 +13,27 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs')
 app.engine('html', require('ejs').renderFile)
 
+//TODO : "/person"로 접근시 person에 저장된 내용 전부 json으로 반환해주기
+
+const mysql = require('mysql2');
+
+const connection = mysql.createConnection({
+    host : '127.0.0.1',
+    user : 'root',
+    database : 'mydatabase',
+    password : '1234'
+});
+
+
+app.get('/persons', (req, res) => {
+    connection.execute(
+        "SELECT * FROM person",
+        function(err, results, fields) {
+            res.json(results) //객체가 담겨있다제 그대로 배열상태로~~
+        }
+    )
+})
+
 // app.get('/', (req, res) => {
 //     const name = "John"
 //     let html = "";
@@ -25,6 +46,7 @@ app.engine('html', require('ejs').renderFile)
 
 app.get('/go_home', (req, res) => {
     res.json({starting_point : "서울", destination : "양구"})
+    res.json({name : '홍길동'})
 })
 
 app.get('/json_test',(req,res) => {
